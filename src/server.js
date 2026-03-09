@@ -2,26 +2,22 @@ const express = require('express');
 const cors = require('cors');
 const pino = require('pino-http');
 
-const {
-  getContactsController,
-  getContactByIdController,
-} = require('./controllers/contacts');
+const contactsRouter = require('./routers/contacts');
+const errorHandler = require('./middlewares/errorHandler');
+const notFoundHandler = require('./middlewares/notFoundHandler');
 
 const setupServer = () => {
   const app = express();
 
+  app.use(express.json());
   app.use(cors());
   app.use(pino());
 
-  app.get('/contacts', getContactsController);
+  app.use('/contacts', contactsRouter);
 
-  app.get('/contacts/:contactId', getContactByIdController);
+  app.use(notFoundHandler);
 
-  app.use((req, res) => {
-    res.status(404).json({
-      message: 'Not found',
-    });
-  });
+  app.use(errorHandler);
 
   const PORT = process.env.PORT || 3000;
 
