@@ -1,4 +1,12 @@
-const { getAllContacts, getContactById } = require('../services/contacts');
+const createError = require('http-errors');
+
+const {
+  getAllContacts,
+  getContactById,
+  createContact,
+  updateContact,
+  deleteContact,
+} = require('../services/contacts');
 
 const getContactsController = async (req, res) => {
   const contacts = await getAllContacts();
@@ -16,9 +24,7 @@ const getContactByIdController = async (req, res) => {
   const contact = await getContactById(contactId);
 
   if (!contact) {
-    return res.status(404).json({
-      message: 'Contact not found',
-    });
+    throw createError(404, 'Contact not found');
   }
 
   res.status(200).json({
@@ -28,7 +34,48 @@ const getContactByIdController = async (req, res) => {
   });
 };
 
+const createContactController = async (req, res) => {
+  const contact = await createContact(req.body);
+
+  res.status(201).json({
+    status: 201,
+    message: 'Successfully created a contact!',
+    data: contact,
+  });
+};
+
+const updateContactController = async (req, res) => {
+  const { contactId } = req.params;
+
+  const contact = await updateContact(contactId, req.body);
+
+  if (!contact) {
+    throw createError(404, 'Contact not found');
+  }
+
+  res.status(200).json({
+    status: 200,
+    message: 'Successfully patched a contact!',
+    data: contact,
+  });
+};
+
+const deleteContactController = async (req, res) => {
+  const { contactId } = req.params;
+
+  const contact = await deleteContact(contactId);
+
+  if (!contact) {
+    throw createError(404, 'Contact not found');
+  }
+
+  res.status(204).send();
+};
+
 module.exports = {
   getContactsController,
   getContactByIdController,
+  createContactController,
+  updateContactController,
+  deleteContactController,
 };
