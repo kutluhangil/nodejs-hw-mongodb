@@ -1,23 +1,17 @@
-const mongoose = require('mongoose');
+const { Schema, model } = require('mongoose');
 
-const contactSchema = new mongoose.Schema(
+const contactSchema = new Schema(
   {
     name: {
       type: String,
       required: true,
-      minlength: 3,
-      maxlength: 20,
     },
     phoneNumber: {
       type: String,
       required: true,
-      minlength: 3,
-      maxlength: 20,
     },
     email: {
       type: String,
-      minlength: 3,
-      maxlength: 20,
     },
     isFavourite: {
       type: Boolean,
@@ -27,6 +21,10 @@ const contactSchema = new mongoose.Schema(
       type: String,
       enum: ['work', 'home', 'personal'],
       default: 'personal',
+    },
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: 'users',
       required: true,
     },
   },
@@ -35,6 +33,6 @@ const contactSchema = new mongoose.Schema(
   },
 );
 
-const Contact = mongoose.model('contacts', contactSchema);
+const Contact = model('contacts', contactSchema);
 
 module.exports = Contact;

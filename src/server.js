@@ -1,8 +1,11 @@
 const express = require('express');
 const cors = require('cors');
 const pino = require('pino-http');
+const cookieParser = require('cookie-parser');
 
 const contactsRouter = require('./routers/contacts');
+const authRouter = require('./routers/auth');
+
 const errorHandler = require('./middlewares/errorHandler');
 const notFoundHandler = require('./middlewares/notFoundHandler');
 
@@ -12,8 +15,10 @@ const setupServer = () => {
   app.use(express.json());
   app.use(cors());
   app.use(pino());
+  app.use(cookieParser());
 
   app.use('/contacts', contactsRouter);
+  app.use('/auth', authRouter);
 
   app.use(notFoundHandler);
 

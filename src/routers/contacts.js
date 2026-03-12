@@ -1,5 +1,7 @@
 const express = require('express');
 
+const authenticate = require('../middlewares/authenticate');
+
 const {
   getContactsController,
   getContactByIdController,
@@ -10,38 +12,18 @@ const {
 
 const ctrlWrapper = require('../utils/ctrlWrapper');
 
-const validateBody = require('../middlewares/validateBody');
-const isValidId = require('../middlewares/isValidId');
-
-const {
-  createContactSchema,
-  updateContactSchema,
-} = require('../validation/contacts');
-
 const router = express.Router();
 
-// GET all contacts
+router.use(authenticate);
+
 router.get('/', ctrlWrapper(getContactsController));
 
-// GET contact by id
-router.get('/:contactId', isValidId, ctrlWrapper(getContactByIdController));
+router.get('/:contactId', ctrlWrapper(getContactByIdController));
 
-// CREATE contact
-router.post(
-  '/',
-  validateBody(createContactSchema),
-  ctrlWrapper(createContactController),
-);
+router.post('/', ctrlWrapper(createContactController));
 
-// UPDATE contact
-router.patch(
-  '/:contactId',
-  isValidId,
-  validateBody(updateContactSchema),
-  ctrlWrapper(updateContactController),
-);
+router.patch('/:contactId', ctrlWrapper(updateContactController));
 
-// DELETE contact
-router.delete('/:contactId', isValidId, ctrlWrapper(deleteContactController));
+router.delete('/:contactId', ctrlWrapper(deleteContactController));
 
 module.exports = router;
