@@ -52,10 +52,12 @@ const getContactByIdController = async (req, res) => {
 };
 
 const createContactController = async (req, res) => {
-  const contact = await createContact({
+  const payload = {
     ...req.body,
     userId: req.user._id,
-  });
+  };
+
+  const contact = await createContact(payload, req.file);
 
   res.status(201).json({
     status: 201,

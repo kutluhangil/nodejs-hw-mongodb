@@ -1,4 +1,5 @@
 const Contact = require('../models/contact');
+const cloudinary = require('../utils/cloudinary');
 
 const getAllContacts = async ({
   userId,
@@ -49,8 +50,25 @@ const getContactById = async (contactId, userId) => {
   return contact;
 };
 
-const createContact = async (payload) => {
-  const contact = await Contact.create(payload);
+const createContact = async (payload, file) => {
+  let photoUrl = null;
+
+  if (file) {
+    const result = await cloudinary.uploader.upload(
+      `data:${file.mimetype};base64,${file.buffer.toString('base64')}`,
+      {
+        folder: 'contacts',
+      },
+    );
+
+    photoUrl = result.secure_url;
+  }
+
+  const contact = await Contact.create({
+    ...payload,
+    photo: photoUrl,
+  });
+
   return contact;
 };
 

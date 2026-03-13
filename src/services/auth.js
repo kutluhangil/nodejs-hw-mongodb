@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt');
 const createHttpError = require('http-errors');
 const { randomBytes } = require('crypto');
+const nodemailer = require('nodemailer');
+const jwt = require('jsonwebtoken');
 
 const { UsersCollection } = require('../db/models/user');
 const { SessionsCollection } = require('../db/models/session');
@@ -90,9 +92,78 @@ const logoutUser = async (refreshToken) => {
   await SessionsCollection.deleteOne({ refreshToken });
 };
 
+const resetPassword = async (token, password) => {
+  let payload;
+
+  try {
+    payload = jwt.verify(token, process.env.JWT_SECRET);
+  } catch (error) {
+    throw createHttpError(401, 'Token is expired or invalid.');
+  }
+
+  const user = await UsersCollection.findOne({ email: payload.email });
+
+  if (!user) {
+    throw createHttpError(404, 'User not found!');
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  await UsersCollection.updateOne(
+    { _id: user._id },
+    { password: hashedPassword },
+  );
+
+  await SessionsCollection.deleteMany({ userId: user._id });
+};
+
+const sendResetEmail = async (email) => {
+  const user = await UsersCollection.findOne({ email });
+
+  if (!user) {
+    throw createHttpError(404, 'User not found!');
+  }
+
+  const token = jwt.sign({ email }, process.env.JWT_SECRET, {
+    expiresIn: '5m',
+  });
+
+  const resetLink = `${process.env.APP_DOMAIN}/reset-password?token=${token}`;
+
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT),
+    secure: false,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASSWORD,
+    },
+  });
+
+  try {
+    await transporter.sendMail({
+      from: process.env.SMTP_FROM,
+      to: email,
+      subject: 'Reset your password',
+      html: `
+        <p>You requested a password reset.</p>
+        <p>Click the link below to reset your password:</p>
+        <a href="${resetLink}">${resetLink}</a>
+      `,
+    });
+  } catch (error) {
+    throw createHttpError(
+      500,
+      'Failed to send the email, please try again later.',
+    );
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
   refreshSession,
   logoutUser,
+  sendResetEmail,
+  resetPassword,
 };

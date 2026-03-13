@@ -3,6 +3,8 @@ const {
   loginUser,
   refreshSession,
   logoutUser,
+  sendResetEmail,
+  resetPassword,
 } = require('../services/auth');
 
 const registerUserController = async (req, res) => {
@@ -29,6 +31,18 @@ const loginUserController = async (req, res) => {
     data: {
       accessToken: session.accessToken,
     },
+  });
+};
+
+const resetPasswordController = async (req, res) => {
+  const { token, password } = req.body;
+
+  await resetPassword(token, password);
+
+  res.status(200).json({
+    status: 200,
+    message: 'Password has been successfully reset.',
+    data: {},
   });
 };
 
@@ -61,9 +75,23 @@ const logoutUserController = async (req, res) => {
   res.status(204).send();
 };
 
+const sendResetEmailController = async (req, res) => {
+  const { email } = req.body;
+
+  await sendResetEmail(email);
+
+  res.status(200).json({
+    status: 200,
+    message: 'Reset password email has been successfully sent.',
+    data: {},
+  });
+};
+
 module.exports = {
   registerUserController,
   loginUserController,
   refreshSessionController,
   logoutUserController,
+  sendResetEmailController,
+  resetPasswordController,
 };

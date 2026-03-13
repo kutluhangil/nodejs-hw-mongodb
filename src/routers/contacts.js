@@ -1,6 +1,13 @@
 const express = require('express');
 
+const upload = require('../middlewares/upload');
 const authenticate = require('../middlewares/authenticate');
+const validateBody = require('../middlewares/validateBody');
+
+const {
+  createContactSchema,
+  updateContactSchema,
+} = require('../validation/contacts');
 
 const {
   getContactsController,
@@ -20,9 +27,14 @@ router.get('/', ctrlWrapper(getContactsController));
 
 router.get('/:contactId', ctrlWrapper(getContactByIdController));
 
-router.post('/', ctrlWrapper(createContactController));
+router.post('/', upload.single('photo'), ctrlWrapper(createContactController));
 
-router.patch('/:contactId', ctrlWrapper(updateContactController));
+router.patch(
+  '/:contactId',
+  upload.single('photo'),
+  validateBody(updateContactSchema),
+  ctrlWrapper(updateContactController),
+);
 
 router.delete('/:contactId', ctrlWrapper(deleteContactController));
 

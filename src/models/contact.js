@@ -6,22 +6,31 @@ const contactSchema = new Schema(
       type: String,
       required: true,
     },
+
     phoneNumber: {
       type: String,
       required: true,
     },
+
     email: {
       type: String,
     },
+
+    contactType: {
+      type: String,
+      enum: ['personal', 'work', 'home'],
+      default: 'personal',
+    },
+
     isFavourite: {
       type: Boolean,
       default: false,
     },
-    contactType: {
+
+    photo: {
       type: String,
-      enum: ['work', 'home', 'personal'],
-      default: 'personal',
     },
+
     userId: {
       type: Schema.Types.ObjectId,
       ref: 'users',
@@ -30,6 +39,7 @@ const contactSchema = new Schema(
   },
   {
     timestamps: true,
+    versionKey: false,
   },
 );
 
