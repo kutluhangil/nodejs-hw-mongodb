@@ -72,10 +72,23 @@ const createContact = async (payload, file) => {
   return contact;
 };
 
-const updateContact = async (contactId, payload, userId) => {
+const updateContact = async (contactId, payload, userId, file) => {
+  let updateData = { ...payload };
+
+  if (file) {
+    const result = await cloudinary.uploader.upload(
+      `data:${file.mimetype};base64,${file.buffer.toString('base64')}`,
+      {
+        folder: 'contacts',
+      },
+    );
+
+    updateData.photo = result.secure_url;
+  }
+
   const contact = await Contact.findOneAndUpdate(
     { _id: contactId, userId },
-    payload,
+    updateData,
     { new: true },
   );
 
