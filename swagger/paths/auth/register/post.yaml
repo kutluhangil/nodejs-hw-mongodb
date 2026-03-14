@@ -1,10 +1,10 @@
 tags:
   - Auth
-summary: Register a new user
+summary: create a new account
 operationId: registerUser
 description: >
-  Creates a new user account. The name, email, and password are required.
-  Returns the created user object (without the password).
+  makes a new user account with name email and password
+  returns the user info back but without the password
 requestBody:
   required: true
   content:
@@ -13,7 +13,7 @@ requestBody:
         $ref: '../../../components/schemas/user.yaml#/RegisterInput'
 responses:
   '201':
-    description: User was successfully registered
+    description: account was created
     content:
       application/json:
         schema:
@@ -30,7 +30,7 @@ responses:
   '400':
     $ref: '../../../components/responses/errors.yaml#/400'
   '409':
-    description: Conflict — email address already in use
+    description: this email is already used by someone else
     content:
       application/json:
         schema:

@@ -6,22 +6,21 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   description: >
-    REST API for managing personal contacts.
-    Features include user registration & login with JWT sessions,
-    password reset via email (Brevo SMTP), contact CRUD with
-    photo upload to Cloudinary, pagination, filtering and sorting.
+    a simple api for managing contacts
+    you can register log in and then create update or delete your contacts
+    also supports photo upload to cloudinary and password reset via email
 
 tags:
   - name: Auth
-    description: Authentication — register, login, logout, token refresh, password reset
+    description: all the login register logout and password reset stuff
   - name: Contacts
-    description: Contact management — CRUD operations with optional photo upload
+    description: create read update and delete contacts with optional photo
 
 servers:
   - url: http://localhost:3000
-    description: Local development server
+    description: run it locally
   - url: https://nodejs-hw-mongodb.onrender.com
-    description: Production server (Render)
+    description: the deployed version on render
 
 paths:
   /contacts:
@@ -61,8 +60,8 @@ components:
       scheme: bearer
       bearerFormat: JWT
       description: >
-        Enter the `accessToken` returned by `POST /auth/login`.
-        Example: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`
+        paste the access token you got from login here
+        format is bearer then a space then the token
 
   schemas:
     Contact:

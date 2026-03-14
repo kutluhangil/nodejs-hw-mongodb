@@ -1,12 +1,11 @@
 tags:
   - Auth
-summary: Log in a user
+summary: log in to your account
 operationId: loginUser
 description: >
-  Authenticates the user and returns a short-lived `accessToken` in the
-  response body. A long-lived `refreshToken` is set as an `HttpOnly` cookie.
-  Use the `accessToken` in the `Authorization: Bearer <token>` header for
-  all protected endpoints.
+  user logs in and gets an access token to use for protected routes
+  the refresh token is saved in a cookie
+  use the access token in the authorization header for all other requests
 requestBody:
   required: true
   content:
@@ -15,7 +14,7 @@ requestBody:
         $ref: '../../../components/schemas/user.yaml#/LoginInput'
 responses:
   '200':
-    description: Successfully logged in
+    description: login worked got the access token back
     content:
       application/json:
         schema:
@@ -36,7 +35,7 @@ responses:
   '400':
     $ref: '../../../components/responses/errors.yaml#/400'
   '401':
-    description: Unauthorized — wrong email or password
+    description: wrong email or password
     content:
       application/json:
         schema:

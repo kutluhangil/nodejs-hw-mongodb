@@ -1,10 +1,10 @@
 tags:
   - Contacts
-summary: Get contact by ID
+summary: get one contact by id
 operationId: getContactById
 description: >
-  Returns a single contact document identified by its `contactId`.
-  The contact must belong to the authenticated user.
+  returns a single contact by its id
+  only works if the contact belongs to the logged in user
 security:
   - bearerAuth: []
 parameters:
@@ -14,10 +14,10 @@ parameters:
     schema:
       type: string
       example: '65ca67e7ae7f10c88b598384'
-    description: Unique MongoDB ObjectId of the contact
+    description: the id of the contact you want to get
 responses:
   '200':
-    description: Successfully retrieved the contact
+    description: found the contact
     content:
       application/json:
         schema:

@@ -1,11 +1,10 @@
 tags:
   - Auth
-summary: Reset user password
+summary: reset the password using the token from email
 operationId: resetPassword
 description: >
-  Verifies the JWT reset token received by email and updates the user's
-  password. After a successful reset **all existing sessions** for that
-  user are deleted (forcing a fresh login).
+  checks the token from the email and updates the users password
+  after this all sessions get deleted so the user has to log in again
 requestBody:
   required: true
   content:
@@ -18,17 +17,17 @@ requestBody:
         properties:
           token:
             type: string
-            description: JWT token received in the reset-password email
+            description: the token you got in the reset email
             example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
           password:
             type: string
             minLength: 6
             maxLength: 20
-            description: The new password
+            description: the new password you want to use
             example: 'newSecurePassword123'
 responses:
   '200':
-    description: Password was successfully reset
+    description: password was changed
     content:
       application/json:
         schema:
@@ -46,7 +45,7 @@ responses:
   '400':
     $ref: '../../../components/responses/errors.yaml#/400'
   '401':
-    description: Unauthorized — token is expired or invalid
+    description: the token is wrong or already expired
     content:
       application/json:
         schema:

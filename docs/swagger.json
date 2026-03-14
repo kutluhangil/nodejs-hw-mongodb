@@ -7,26 +7,26 @@
       "name": "Apache 2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "description": "REST API for managing personal contacts. Features include user registration & login with JWT sessions, password reset via email (Brevo SMTP), contact CRUD with photo upload to Cloudinary, pagination, filtering and sorting.\n"
+    "description": "a simple api for managing contacts you can register log in and then create update or delete your contacts also supports photo upload to cloudinary and password reset via email\n"
   },
   "servers": [
     {
       "url": "http://localhost:3000",
-      "description": "Local development server"
+      "description": "run it locally"
     },
     {
       "url": "https://nodejs-hw-mongodb.onrender.com",
-      "description": "Production server (Render)"
+      "description": "the deployed version on render"
     }
   ],
   "tags": [
     {
       "name": "Auth",
-      "description": "Authentication — register, login, logout, token refresh, password reset"
+      "description": "all the login register logout and password reset stuff"
     },
     {
       "name": "Contacts",
-      "description": "Contact management — CRUD operations with optional photo upload"
+      "description": "create read update and delete contacts with optional photo"
     }
   ],
   "paths": {
@@ -35,9 +35,9 @@
         "tags": [
           "Contacts"
         ],
-        "summary": "Get all contacts",
+        "summary": "get all contacts",
         "operationId": "getContacts",
-        "description": "Returns a paginated list of contacts belonging to the authenticated user. Supports filtering by type and favourite status, and sorting by any field.\n",
+        "description": "returns all contacts that belong to the logged in user you can filter by type or favourite and also sort and paginate the results\n",
         "security": [
           {
             "bearerAuth": []
@@ -52,7 +52,7 @@
               "minimum": 1,
               "default": 1
             },
-            "description": "Page number for pagination"
+            "description": "which page you want to see"
           },
           {
             "in": "query",
@@ -63,7 +63,7 @@
               "maximum": 100,
               "default": 10
             },
-            "description": "Number of contacts per page"
+            "description": "how many contacts to show per page"
           },
           {
             "in": "query",
@@ -73,7 +73,7 @@
               "default": "name",
               "example": "name"
             },
-            "description": "Field to sort by"
+            "description": "which field to sort by"
           },
           {
             "in": "query",
@@ -86,7 +86,7 @@
               ],
               "default": "asc"
             },
-            "description": "Sort direction"
+            "description": "sort ascending or descending"
           },
           {
             "in": "query",
@@ -99,7 +99,7 @@
                 "personal"
               ]
             },
-            "description": "Filter contacts by type"
+            "description": "filter by contact type"
           },
           {
             "in": "query",
@@ -107,12 +107,12 @@
             "schema": {
               "type": "boolean"
             },
-            "description": "Filter by favourite status"
+            "description": "show only favourites or non-favourites"
           }
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved contacts list",
+            "description": "got the contacts list back",
             "content": {
               "application/json": {
                 "schema": {
@@ -180,9 +180,9 @@
         "tags": [
           "Contacts"
         ],
-        "summary": "Create a new contact",
+        "summary": "add a new contact",
         "operationId": "createContact",
-        "description": "Creates a new contact for the authenticated user. Accepts `multipart/form-data` so that an optional photo can be uploaded. If a photo file is provided, it will be uploaded to Cloudinary and the returned URL will be stored in the `photo` field.\n",
+        "description": "creates a new contact for the logged in user you can also upload a photo and it gets saved to cloudinary the photo url is then stored in the contact\n",
         "security": [
           {
             "bearerAuth": []
@@ -232,7 +232,7 @@
                   "photo": {
                     "type": "string",
                     "format": "binary",
-                    "description": "Optional contact photo (max 5MB)"
+                    "description": "optional photo for the contact max 5mb"
                   }
                 }
               }
@@ -241,7 +241,7 @@
         },
         "responses": {
           "201": {
-            "description": "Contact was successfully created",
+            "description": "contact was created",
             "content": {
               "application/json": {
                 "schema": {
@@ -282,9 +282,9 @@
         "tags": [
           "Contacts"
         ],
-        "summary": "Get contact by ID",
+        "summary": "get one contact by id",
         "operationId": "getContactById",
-        "description": "Returns a single contact document identified by its `contactId`. The contact must belong to the authenticated user.\n",
+        "description": "returns a single contact by its id only works if the contact belongs to the logged in user\n",
         "security": [
           {
             "bearerAuth": []
@@ -299,12 +299,12 @@
               "type": "string",
               "example": "65ca67e7ae7f10c88b598384"
             },
-            "description": "Unique MongoDB ObjectId of the contact"
+            "description": "the id of the contact you want to get"
           }
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved the contact",
+            "description": "found the contact",
             "content": {
               "application/json": {
                 "schema": {
@@ -343,9 +343,9 @@
         "tags": [
           "Contacts"
         ],
-        "summary": "Update contact by ID",
+        "summary": "update a contact by id",
         "operationId": "updateContact",
-        "description": "Partially updates an existing contact. All body fields are optional. Accepts `multipart/form-data` so that the contact photo can be replaced. If a new photo is provided, it will be uploaded to Cloudinary and the previous URL will be overwritten.\n",
+        "description": "updates some fields of an existing contact all fields are optional so you only send what you want to change if you include a photo it gets uploaded to cloudinary and the old one is replaced\n",
         "security": [
           {
             "bearerAuth": []
@@ -360,7 +360,7 @@
               "type": "string",
               "example": "65ca67e7ae7f10c88b598384"
             },
-            "description": "Unique MongoDB ObjectId of the contact"
+            "description": "the id of the contact you want to update"
           }
         ],
         "requestBody": {
@@ -402,7 +402,7 @@
                   "photo": {
                     "type": "string",
                     "format": "binary",
-                    "description": "New contact photo (max 5MB)"
+                    "description": "new photo to replace the old one max 5mb"
                   }
                 }
               }
@@ -411,7 +411,7 @@
         },
         "responses": {
           "200": {
-            "description": "Contact was successfully updated",
+            "description": "contact was updated",
             "content": {
               "application/json": {
                 "schema": {
@@ -453,9 +453,9 @@
         "tags": [
           "Contacts"
         ],
-        "summary": "Delete contact by ID",
+        "summary": "delete a contact by id",
         "operationId": "deleteContact",
-        "description": "Permanently deletes the contact identified by `contactId`. The contact must belong to the authenticated user. Returns HTTP 204 with no body on success.\n",
+        "description": "removes the contact from the database the contact has to belong to the logged in user returns nothing if it worked\n",
         "security": [
           {
             "bearerAuth": []
@@ -470,12 +470,12 @@
               "type": "string",
               "example": "65ca67e7ae7f10c88b598384"
             },
-            "description": "Unique MongoDB ObjectId of the contact"
+            "description": "the id of the contact to delete"
           }
         ],
         "responses": {
           "204": {
-            "description": "Contact was successfully deleted (no content)"
+            "description": "contact was deleted nothing returned"
           },
           "401": {
             "$ref": "#/components/responses/401"
@@ -491,9 +491,9 @@
         "tags": [
           "Auth"
         ],
-        "summary": "Register a new user",
+        "summary": "create a new account",
         "operationId": "registerUser",
-        "description": "Creates a new user account. The name, email, and password are required. Returns the created user object (without the password).\n",
+        "description": "makes a new user account with name email and password returns the user info back but without the password\n",
         "requestBody": {
           "required": true,
           "content": {
@@ -506,7 +506,7 @@
         },
         "responses": {
           "201": {
-            "description": "User was successfully registered",
+            "description": "account was created",
             "content": {
               "application/json": {
                 "schema": {
@@ -532,7 +532,7 @@
             "$ref": "#/components/responses/400"
           },
           "409": {
-            "description": "Conflict — email address already in use",
+            "description": "this email is already used by someone else",
             "content": {
               "application/json": {
                 "schema": {
@@ -559,9 +559,9 @@
         "tags": [
           "Auth"
         ],
-        "summary": "Log in a user",
+        "summary": "log in to your account",
         "operationId": "loginUser",
-        "description": "Authenticates the user and returns a short-lived `accessToken` in the response body. A long-lived `refreshToken` is set as an `HttpOnly` cookie. Use the `accessToken` in the `Authorization: Bearer <token>` header for all protected endpoints.\n",
+        "description": "user logs in and gets an access token to use for protected routes the refresh token is saved in a cookie use the access token in the authorization header for all other requests\n",
         "requestBody": {
           "required": true,
           "content": {
@@ -574,7 +574,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successfully logged in",
+            "description": "login worked got the access token back",
             "content": {
               "application/json": {
                 "schema": {
@@ -606,7 +606,7 @@
             "$ref": "#/components/responses/400"
           },
           "401": {
-            "description": "Unauthorized — wrong email or password",
+            "description": "wrong email or password",
             "content": {
               "application/json": {
                 "schema": {
@@ -633,9 +633,9 @@
         "tags": [
           "Auth"
         ],
-        "summary": "Send password reset email",
+        "summary": "send password reset link to email",
         "operationId": "sendResetEmail",
-        "description": "Sends a password reset link to the provided email address. The link contains a JWT token valid for **5 minutes** and points to `APP_DOMAIN/reset-password?token=<jwt>`. Returns a 404 if no user with that email exists.\n",
+        "description": "sends an email with a reset link to the user the link has a jwt token that expires in 5 minutes if the email doesnt exist in the db it returns 404\n",
         "requestBody": {
           "required": true,
           "content": {
@@ -658,7 +658,7 @@
         },
         "responses": {
           "200": {
-            "description": "Reset email sent successfully",
+            "description": "email was sent",
             "content": {
               "application/json": {
                 "schema": {
@@ -698,9 +698,9 @@
         "tags": [
           "Auth"
         ],
-        "summary": "Reset user password",
+        "summary": "reset the password using the token from email",
         "operationId": "resetPassword",
-        "description": "Verifies the JWT reset token received by email and updates the user's password. After a successful reset **all existing sessions** for that user are deleted (forcing a fresh login).\n",
+        "description": "checks the token from the email and updates the users password after this all sessions get deleted so the user has to log in again\n",
         "requestBody": {
           "required": true,
           "content": {
@@ -714,14 +714,14 @@
                 "properties": {
                   "token": {
                     "type": "string",
-                    "description": "JWT token received in the reset-password email",
+                    "description": "the token you got in the reset email",
                     "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
                   },
                   "password": {
                     "type": "string",
                     "minLength": 6,
                     "maxLength": 20,
-                    "description": "The new password",
+                    "description": "the new password you want to use",
                     "example": "newSecurePassword123"
                   }
                 }
@@ -731,7 +731,7 @@
         },
         "responses": {
           "200": {
-            "description": "Password was successfully reset",
+            "description": "password was changed",
             "content": {
               "application/json": {
                 "schema": {
@@ -758,7 +758,7 @@
             "$ref": "#/components/responses/400"
           },
           "401": {
-            "description": "Unauthorized — token is expired or invalid",
+            "description": "the token is wrong or already expired",
             "content": {
               "application/json": {
                 "schema": {
@@ -790,7 +790,7 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT",
-        "description": "Enter the `accessToken` returned by `POST /auth/login`. Example: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`\n"
+        "description": "paste the access token you got from login here format is bearer then a space then the token\n"
       }
     },
     "schemas": {

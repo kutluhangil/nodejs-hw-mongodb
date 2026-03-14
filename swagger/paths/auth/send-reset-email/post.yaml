@@ -1,12 +1,11 @@
 tags:
   - Auth
-summary: Send password reset email
+summary: send password reset link to email
 operationId: sendResetEmail
 description: >
-  Sends a password reset link to the provided email address.
-  The link contains a JWT token valid for **5 minutes** and points to
-  `APP_DOMAIN/reset-password?token=<jwt>`.
-  Returns a 404 if no user with that email exists.
+  sends an email with a reset link to the user
+  the link has a jwt token that expires in 5 minutes
+  if the email doesnt exist in the db it returns 404
 requestBody:
   required: true
   content:
@@ -22,7 +21,7 @@ requestBody:
             example: 'john@example.com'
 responses:
   '200':
-    description: Reset email sent successfully
+    description: email was sent
     content:
       application/json:
         schema:

@@ -1,12 +1,11 @@
 tags:
   - Contacts
-summary: Update contact by ID
+summary: update a contact by id
 operationId: updateContact
 description: >
-  Partially updates an existing contact. All body fields are optional.
-  Accepts `multipart/form-data` so that the contact photo can be replaced.
-  If a new photo is provided, it will be uploaded to Cloudinary and the
-  previous URL will be overwritten.
+  updates some fields of an existing contact
+  all fields are optional so you only send what you want to change
+  if you include a photo it gets uploaded to cloudinary and the old one is replaced
 security:
   - bearerAuth: []
 parameters:
@@ -16,7 +15,7 @@ parameters:
     schema:
       type: string
       example: '65ca67e7ae7f10c88b598384'
-    description: Unique MongoDB ObjectId of the contact
+    description: the id of the contact you want to update
 requestBody:
   content:
     multipart/form-data:
@@ -47,10 +46,10 @@ requestBody:
           photo:
             type: string
             format: binary
-            description: New contact photo (max 5MB)
+            description: new photo to replace the old one max 5mb
 responses:
   '200':
-    description: Contact was successfully updated
+    description: contact was updated
     content:
       application/json:
         schema:
