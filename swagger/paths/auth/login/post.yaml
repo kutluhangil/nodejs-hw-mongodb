@@ -1,0 +1,50 @@
+tags:
+  - Auth
+summary: Log in a user
+operationId: loginUser
+description: >
+  Authenticates the user and returns a short-lived `accessToken` in the
+  response body. A long-lived `refreshToken` is set as an `HttpOnly` cookie.
+  Use the `accessToken` in the `Authorization: Bearer <token>` header for
+  all protected endpoints.
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: '../../../components/schemas/user.yaml#/LoginInput'
+responses:
+  '200':
+    description: Successfully logged in
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: 'Successfully logged in an user!'
+            data:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                  example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+  '400':
+    $ref: '../../../components/responses/errors.yaml#/400'
+  '401':
+    description: Unauthorized — wrong email or password
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 401
+            message:
+              type: string
+              example: 'Unauthorized'

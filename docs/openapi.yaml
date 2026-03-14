@@ -1,0 +1,90 @@
+openapi: 3.1.0
+info:
+  version: 1.0.0
+  title: Contacts API
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  description: >
+    REST API for managing personal contacts.
+    Features include user registration & login with JWT sessions,
+    password reset via email (Brevo SMTP), contact CRUD with
+    photo upload to Cloudinary, pagination, filtering and sorting.
+
+tags:
+  - name: Auth
+    description: Authentication — register, login, logout, token refresh, password reset
+  - name: Contacts
+    description: Contact management — CRUD operations with optional photo upload
+
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+  - url: https://nodejs-hw-mongodb.onrender.com
+    description: Production server (Render)
+
+paths:
+  /contacts:
+    get:
+      $ref: '../swagger/paths/contacts/get.yaml'
+    post:
+      $ref: '../swagger/paths/contacts/post.yaml'
+
+  /contacts/{contactId}:
+    get:
+      $ref: '../swagger/paths/contacts/{id}/get.yaml'
+    patch:
+      $ref: '../swagger/paths/contacts/{id}/patch.yaml'
+    delete:
+      $ref: '../swagger/paths/contacts/{id}/delete.yaml'
+
+  /auth/register:
+    post:
+      $ref: '../swagger/paths/auth/register/post.yaml'
+
+  /auth/login:
+    post:
+      $ref: '../swagger/paths/auth/login/post.yaml'
+
+  /auth/send-reset-email:
+    post:
+      $ref: '../swagger/paths/auth/send-reset-email/post.yaml'
+
+  /auth/reset-pwd:
+    post:
+      $ref: '../swagger/paths/auth/reset-pwd/post.yaml'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: >
+        Enter the `accessToken` returned by `POST /auth/login`.
+        Example: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`
+
+  schemas:
+    Contact:
+      $ref: '../swagger/components/schemas/contact.yaml#/Contact'
+    ContactInput:
+      $ref: '../swagger/components/schemas/contact.yaml#/ContactInput'
+    ContactUpdateInput:
+      $ref: '../swagger/components/schemas/contact.yaml#/ContactUpdateInput'
+    User:
+      $ref: '../swagger/components/schemas/user.yaml#/User'
+    RegisterInput:
+      $ref: '../swagger/components/schemas/user.yaml#/RegisterInput'
+    LoginInput:
+      $ref: '../swagger/components/schemas/user.yaml#/LoginInput'
+
+  responses:
+    400:
+      $ref: '../swagger/components/responses/errors.yaml#/400'
+    401:
+      $ref: '../swagger/components/responses/errors.yaml#/401'
+    404:
+      $ref: '../swagger/components/responses/errors.yaml#/404'
+    500:
+      $ref: '../swagger/components/responses/errors.yaml#/500'
+

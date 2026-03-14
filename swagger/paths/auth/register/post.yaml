@@ -1,0 +1,44 @@
+tags:
+  - Auth
+summary: Register a new user
+operationId: registerUser
+description: >
+  Creates a new user account. The name, email, and password are required.
+  Returns the created user object (without the password).
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: '../../../components/schemas/user.yaml#/RegisterInput'
+responses:
+  '201':
+    description: User was successfully registered
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 201
+            message:
+              type: string
+              example: 'Successfully registered a user!'
+            data:
+              $ref: '../../../components/schemas/user.yaml#/User'
+  '400':
+    $ref: '../../../components/responses/errors.yaml#/400'
+  '409':
+    description: Conflict — email address already in use
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 409
+            message:
+              type: string
+              example: 'Email in use'

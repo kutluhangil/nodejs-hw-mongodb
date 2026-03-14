@@ -1,0 +1,76 @@
+tags:
+  - Contacts
+summary: Update contact by ID
+operationId: updateContact
+description: >
+  Partially updates an existing contact. All body fields are optional.
+  Accepts `multipart/form-data` so that the contact photo can be replaced.
+  If a new photo is provided, it will be uploaded to Cloudinary and the
+  previous URL will be overwritten.
+security:
+  - bearerAuth: []
+parameters:
+  - in: path
+    name: contactId
+    required: true
+    schema:
+      type: string
+      example: '65ca67e7ae7f10c88b598384'
+    description: Unique MongoDB ObjectId of the contact
+requestBody:
+  content:
+    multipart/form-data:
+      schema:
+        type: object
+        properties:
+          name:
+            type: string
+            minLength: 3
+            maxLength: 20
+            example: 'Jane Doe'
+          phoneNumber:
+            type: string
+            minLength: 3
+            maxLength: 20
+            example: '+905559876543'
+          email:
+            type: string
+            format: email
+            example: 'jane@example.com'
+          contactType:
+            type: string
+            enum: [work, home, personal]
+            example: work
+          isFavourite:
+            type: boolean
+            example: true
+          photo:
+            type: string
+            format: binary
+            description: New contact photo (max 5MB)
+responses:
+  '200':
+    description: Contact was successfully updated
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: 'Successfully patched a contact!'
+            data:
+              $ref: '../../../components/schemas/contact.yaml#/Contact'
+  '400':
+    $ref: '../../../components/responses/errors.yaml#/400'
+  '401':
+    $ref: '../../../components/responses/errors.yaml#/401'
+  '404':
+    $ref: '../../../components/responses/errors.yaml#/404'

@@ -1,0 +1,70 @@
+tags:
+  - Contacts
+summary: Create a new contact
+operationId: createContact
+description: >
+  Creates a new contact for the authenticated user.
+  Accepts `multipart/form-data` so that an optional photo can be uploaded.
+  If a photo file is provided, it will be uploaded to Cloudinary and the
+  returned URL will be stored in the `photo` field.
+security:
+  - bearerAuth: []
+requestBody:
+  required: true
+  content:
+    multipart/form-data:
+      schema:
+        type: object
+        required:
+          - name
+          - phoneNumber
+        properties:
+          name:
+            type: string
+            minLength: 3
+            maxLength: 20
+            example: 'John Doe'
+          phoneNumber:
+            type: string
+            minLength: 3
+            maxLength: 20
+            example: '+905551234567'
+          email:
+            type: string
+            format: email
+            example: 'john@example.com'
+          contactType:
+            type: string
+            enum: [work, home, personal]
+            example: personal
+          isFavourite:
+            type: boolean
+            example: false
+          photo:
+            type: string
+            format: binary
+            description: Optional contact photo (max 5MB)
+responses:
+  '201':
+    description: Contact was successfully created
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 201
+            message:
+              type: string
+              example: 'Successfully created a contact!'
+            data:
+              $ref: '../../components/schemas/contact.yaml#/Contact'
+  '400':
+    $ref: '../../components/responses/errors.yaml#/400'
+  '401':
+    $ref: '../../components/responses/errors.yaml#/401'

@@ -6,7 +6,10 @@
   "type": "commonjs",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "build": "npm run build-docs",
+    "build-docs": "redocly bundle sample@v1 --ext json -o docs/swagger.json",
+    "preview-docs": "redocly preview-docs"
   },
   "keywords": [],
   "author": "",
@@ -24,10 +27,12 @@
     "mongoose": "^9.2.4",
     "multer": "^2.1.1",
     "nodemailer": "^8.0.2",
-    "pino-http": "^10.5.0"
+    "pino-http": "^10.5.0",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@redocly/cli": "^2.21.1",
     "eslint": "^10.0.3",
     "globals": "^17.4.0",
     "nodemon": "^3.1.14"
